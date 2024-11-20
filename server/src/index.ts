@@ -4,12 +4,20 @@ import swagger from "@elysiajs/swagger";
 import { swaggerConfig } from "./configs/swagger.config";
 import { tlsConfig } from "./configs/tls.config";
 import cors from "@elysiajs/cors";
+import { DataBase_MongoDB } from "./configs/database.config";
+import { jwtConfig } from "./configs/jwt.config";
+import { AccountController } from "./controllers/account.controller";
+
+DataBase_MongoDB.connect()
 
 const app = new Elysia()
   .use(cors())
   .use(swaggerConfig)
-  .use(example)
-
+  .use(jwtConfig)
+  //.use(example)
+  .use(AccountController)
+  
+  
   .listen({
     port: Bun.env.PORT || 8000,
     tls: tlsConfig
