@@ -7,6 +7,8 @@ import cors from "@elysiajs/cors";
 import { DataBase_MongoDB } from "./configs/database.config";
 import { jwtConfig } from "./configs/jwt.config";
 import { AccountController } from "./controllers/account.controller";
+import { UserController } from "./controllers/user.controller";
+
 
 DataBase_MongoDB.connect()
 
@@ -16,6 +18,7 @@ const app = new Elysia()
   .use(jwtConfig)
   //.use(example)
   .use(AccountController)
+  .use(UserController)
   
   
   .listen({

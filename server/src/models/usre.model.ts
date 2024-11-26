@@ -3,7 +3,7 @@ import { register } from './../types/account.type';
 import { VerifyOptions } from './../../node_modules/jose/dist/types/types.d';
 import mongoose from "mongoose";
 import { IUserDocumet, IUserModel } from "../interfaces/user.interface";
-import { user } from "../types/account.type";
+import { user } from './../types/user.type';
 import { calculateAge } from "../helper/date.helper";
 
 const schema = new mongoose.Schema<IUserDocumet, IUserModel>({
@@ -16,6 +16,7 @@ const schema = new mongoose.Schema<IUserDocumet, IUserModel>({
     interest: { type: String },
     looking_for: { type: String },
     location: { type: String },
+    gender: {type: String}
 
     //todo: implement photo feature
     // photos: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Photo' }],
@@ -60,6 +61,7 @@ schema.methods.toUser = function (): user {
         interest: this.interest,
         looking_for: this.looking_for,
         location: this.location,
+        gender: this.gender,
         // todo: photo feature
         // photos: userPhotos,
         // todo: like feature
@@ -76,8 +78,10 @@ schema.statics.createUser = async function (registerData:register):  Promise<IUs
     const newUser = await new this({
         display_name: registerData.display_name,
         username: registerData.username,
+        password_hash: await Bun.password.hash(registerData.password),
         date_of_birth: registerData.data_of_birth,
-        looking_for: registerData.looking_for
+        looking_for: registerData.looking_for,
+         
     })
 
     await newUser.save()
