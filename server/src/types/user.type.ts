@@ -9,9 +9,9 @@ export const _profile = t.Object({
     interest: t.Optional(t.String()),
     location: t.Optional(t.String()),
     age: t.Optional(t.String()),
-    last_active: t.Optional(t.String()),
-    created_at: t.Optional(t.String()),
-    updated_at: t.Optional(t.String()),
+    last_active: t.Optional(t.Date()),
+    created_at: t.Optional(t.Date()),
+    updated_at: t.Optional(t.Date()),
 
     //todo: implement upload feature
     // photo:
@@ -34,14 +34,15 @@ const _userPagination = t.Object({
     user:t.Optional(t.String()),
     min_age:t.Optional(t.Number()),
     max_age:t.Optional(t.Number()),
-    looking_for: t.Optional(t.Union([t.Literal('male'), t.Literal('female'), t.Literal('all'),])
+    looking_for: t.Optional(t.Union([t.Literal('male'), t.Literal('female'), t.Literal('all'),])),
+    gender: t.Optional(t.Union([t.Literal('male'), t.Literal('female'), t.Literal('all'),])
 )})
 
 export const _updateProfile = t.Omit(_profile,['id', 'username', 'updated_at', 'created_at', 'Last_active', 'age'])
 export const _userPaginator = CeatePagination(_user, _userPagination)
 
-export const User = new Elysia().model({
-    pagintion: t.Optional(_userPagination),
+export const UserDto = new Elysia().model({
+    pagination: t.Optional(_userPagination),
     updateProfile: _updateProfile,
     users: _userPaginator,
     user: _user

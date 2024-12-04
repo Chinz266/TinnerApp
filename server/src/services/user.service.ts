@@ -1,21 +1,43 @@
+
 import mongoose, { RootFilterQuery } from "mongoose";
 import { updateProfile, user, userPagination, userPaginator } from "../types/user.type";
 import { IUserDocumet } from "../interfaces/user.interface";
 import { QueryHelper } from "../helper/query.helper";
+import { User } from "../models/usre.model";
 
 
 export const UserService = {
-    get: function (pagination: userPagination, user_id: string):Promise<userPaginator> {
+    get: async function (pagination: userPagination, user_id: string): Promise<userPaginator> {
         let filter: RootFilterQuery<IUserDocumet> = {
-            id:{$nin: new mongoose.Types.ObjectId(user_id)},
-            $adn: QueryHelper.parseUserQuery(pagination)
+            _id: { $nin: new mongoose.Types.ObjectId(user_id) },
+            $and: QueryHelper.parseUserQuery(pagination)
         }
-        throw new Error('not implemen');
+        const query = User.find(filter).sort({ last_active: -1 })
+        const skip = pagination.pageSize * (pagination.currentPage - 1)
+        query.skip(skip).limit(pagination.pageSize)
+        const [docs, total] = await Promise.all([
+            query.exec(),
+            User.countDocuments(filter).exec()
+        ])
+
+        pagination.length = total
+        return {
+            pagination: pagination,
+            items: docs.map(doc => doc.toUser())
+        }
     },
-    getByUserName: function(username: string):Promise<user> {
-        throw new Error('not implemen');
-    },
-    updateProfile: function(newProfile: updateProfile, user_id:string):Promise<user> {
-        throw new Error('not implemen');
+    
+    // getByUserName: async function (username: string): Promise<user> {
+    //     const user = await User.findOne({ username }).exec()
+    //     if (user)
+    //         return user.toUser()
+    //     throw new Error(`username: "${username}" not found!!`);
+    // },
+
+    updateProfile: async function (newProfile: updateProfile, user_id: string): Promise<user> {
+        const user = await User.findByIdAndUpdate(user_id,{$set: newProfile},{new:true, runValidators: true})
+        if (user)
+            return user.toUser()
+        throw new Error('Something went wrong, Try again!!');
     }
 }
