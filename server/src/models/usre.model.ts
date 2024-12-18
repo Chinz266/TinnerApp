@@ -20,8 +20,8 @@ const schema = new mongoose.Schema<IUserDocumet, IUserModel>({
     //todo: implement photo feature
     photos: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Photo' }],
     //todo: implement like feature
-    // followers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-    // following: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    followers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    following: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
 }, {
     timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }
 })
@@ -35,19 +35,19 @@ schema.methods.toUser = function (): user {
     : undefined
     
     // todo: implement like feature
-    // const parseLikeUser = (user: IUserDocument[]) => {
-    //     return user.map(u => {
-    //         if (u.display_name)
-    //             return u.toUser()
-    //         return u._id!.toString()
-    //     })
-    // }
-    // const following = Array.isArray(this.following)
-    //     ? parseLikeUser(this.following)
-    //     : undefined
-    // const followers = Array.isArray(this.followers)
-    //     ? parseLikeUser(this.followers)
-    //     : undefined
+    const parseLikeUser = (user: IUserDocumet[]) => {
+        return user.map(u => {
+            if (u.display_name)
+                return u.toUser()
+            return u._id!.toString()
+        })
+    }
+    const following = Array.isArray(this.following)
+        ? parseLikeUser(this.following)
+        : undefined
+    const followers = Array.isArray(this.followers)
+        ? parseLikeUser(this.followers)
+        : undefined
     return {
         id: this._id.toString(),
         display_name: this.display_name,
@@ -65,8 +65,8 @@ schema.methods.toUser = function (): user {
         // todo: photo feature
         photos: userPhotos,
         // todo: like feature
-        // following: following,
-        // followers: followers,
+        following: following,
+        followers: followers,
     }
 }
 

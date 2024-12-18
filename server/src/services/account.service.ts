@@ -7,16 +7,17 @@ export const AccountService = {
 
     login: async function (LoginData: login): Promise<user> {
         const user = await User.findOne({ username: LoginData.username })
-            // TODO: implement photo and like feature
             .populate("photos")
-            // .populate({
-            //   path: 'following',
-            //   select: '_id'
-            // })
-            // .populate({
-            //   path: 'followers',
-            //   select: '_id'
-            // })
+            
+            .populate({
+                path: "followers",
+                select: "_id",
+            })
+            .populate({
+                path: "following",
+                select: "_id",
+            })
+
             .exec();
 
         if (!user) {

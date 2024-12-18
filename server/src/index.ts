@@ -10,6 +10,7 @@ import { AccountController } from "./controllers/account.controller";
 import { UserController } from "./controllers/user.controller";
 import staticPlugin from "@elysiajs/static";
 import { PhotoController } from "./controllers/photo.controller";
+import { LinkController } from "./controllers/like.controller";
 
 
 DataBase_MongoDB.connect()
@@ -28,6 +29,7 @@ const app = new Elysia()
   .use(AccountController)
   .use(UserController)
   .use(PhotoController)
+  .use(LinkController)
   
   .listen({
     port: Bun.env.PORT || 8000,
