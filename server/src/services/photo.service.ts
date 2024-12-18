@@ -49,11 +49,11 @@ export const PhotoService = {
 
     delete: async function (photo_id: string): Promise<boolean> {
         const doc = await Photo.findById(photo_id).exec()
-        if(!doc)
-           throw new Error(`photo ${photo_id} not existing`)
+        if (!doc)
+            throw new Error(`photo ${photo_id} not existing`)
 
         await User.findByIdAndUpdate(doc.user, {
-            $pull:{photos: photo_id}
+            $pull: { photos: photo_id }
         })
         await Photo.findByIdAndDelete(photo_id)
 
@@ -62,8 +62,17 @@ export const PhotoService = {
         return true;
     },
 
-    setAvatar: async function (photo_id: string): Promise<photo> {
-        throw new Error("not implement")
+    setAvatar: async function (photo_id: string, user_id: string): Promise<boolean> {
+        await Photo.updateMany(
+            { user: new mongoose.Types.ObjectId(user_id) },
+            { $set: { is_avatar: false } }
+        )
+        const result = await Photo.findByIdAndUpdate(photo_id,
+            { $set: { is_avatar: true } },
+            { new: true }
+        )
+
+        return !!result
     },
 
 }

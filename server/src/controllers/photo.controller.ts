@@ -14,9 +14,26 @@ export const PhotoController = new Elysia({
     .use(PhotoDto)
     .use(AuthMiddleWare)
 
-    .delete('/:photo_id',async ({params: { photo_id},set}) => {
+    .patch('/:photo_id', async ({ params: { photo_id }, set, Auth }) => {
         try {
-            await PhotoService.delete(photo_id) 
+            const user_id = (Auth.payload as AuthPayload).id
+            await PhotoService.setAvatar(photo_id,user_id)
+            set.status = "No Content"
+        } catch (error) {
+            set.status = 400
+            if (error instanceof Error)
+                throw error
+            throw new Error("Something Wrong!! Try Again")
+        }
+    }, {
+        detail: { summary: "Set Avatar" },
+        isSignIn: true,
+        params: "photo_id",
+    })
+
+    .delete('/:photo_id', async ({ params: { photo_id }, set }) => {
+        try {
+            await PhotoService.delete(photo_id)
             set.status = "No Content"
         } catch (error) {
             set.status = 400
@@ -30,10 +47,10 @@ export const PhotoController = new Elysia({
         params: "photo_id"
     })
 
-    .get('/', async ({Auth}) => {
+    .get('/', async ({ Auth }) => {
         const user_id = (Auth.payload as AuthPayload).id
         return await PhotoService.getPhotos(user_id)
-    },{
+    }, {
         detail: { summary: "Get photo[] by user_id" },
         isSignIn: true,
         response: "photos",
