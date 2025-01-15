@@ -1,1 +1,90 @@
-<p>login works!</p>
+<mat-card appearance="outlined">
+    <mat-card-header>
+        <mat-card-title>
+            @if (mode === 'login') {
+            Sign In
+            }
+            @if (mode === 'register') {
+            Sign Up
+            }
+        </mat-card-title>
+    </mat-card-header>
+
+    <mat-card appearance="outlined">
+        <div class="login-container">
+            <form (ngSubmit)="onSubmit()" [formGroup]="form" autocomplete="off">
+                <mat-form-field appearance="outline">
+                    <mat-label>Username</mat-label>
+                    <input matInput placeholder="username" type="text" (input)="updateErrorMassage('username')"
+                        formControlName="username">
+                    <mat-error>{{errorMassage.username()}}</mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Password</mat-label>
+                    <input matInput placeholder="password" type="password" (input)="updateErrorMassage('password')"
+                        formControlName="password">
+                    <mat-error>{{errorMassage.password()}}</mat-error>
+                </mat-form-field>
+
+                @if (mode === 'register') {
+                <mat-form-field appearance="outline">
+                    <mat-label>Confirm Password</mat-label>
+                    <input matInput placeholder="comfirm password" type="password"
+                        (input)="updateErrorMassage('confirm_password')" formControlName="confirm_password">
+                    <mat-error>{{errorMassage.confirm_password()}}</mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Date of Birth</mat-label>
+                    <input matInput [matDatepicker]="picker" formControlName="date_of_birth">
+                    <mat-datepicker-toggle [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker startView="year" [startAt]="startDate"></mat-datepicker>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Displayname</mat-label>
+                    <input matInput placeholder="username" type="text" (input)="updateErrorMassage('display_name')"
+                        formControlName="display_name">
+                    <mat-error>{{errorMassage.display_name()}}</mat-error>
+                </mat-form-field>
+
+                <div>
+                    <label class="example-margin">Gender:</label>
+                    <mat-radio-group formControlName="gender">
+                        <mat-radio-button class="example-margin" value="male">Male</mat-radio-button>
+                        <mat-radio-button class="example-margin" value="female">Female</mat-radio-button>
+                        <mat-radio-button class="example-margin" value="all">LGTBQ+</mat-radio-button>
+                    </mat-radio-group>
+                </div>
+
+                <div>
+                    <label class="example-margin">Looking for:</label>
+                    <mat-radio-group formControlName="looking_for">
+                        <mat-radio-button class="example-margin" value="male">Male</mat-radio-button>
+                        <mat-radio-button class="example-margin" value="female">Female</mat-radio-button>
+                        <mat-radio-button class="example-margin" value="all">LGTBQ+</mat-radio-button>
+                    </mat-radio-group>
+                </div>
+                }
+
+                <button mat-button [disabled]="form.invalid">
+                    @if (mode === 'login') {
+                    Login
+                    }
+                    @if (mode === 'register') {
+                    Register
+                    }
+                </button>
+            </form>
+
+            <div class="login-spacer">or</div>
+
+            @if (mode === 'login') {
+            <div class="toggle">New to MyApp <span (click)="toggleMode()">Sign Up</span></div>
+            }
+            @if (mode === 'register') {
+            <div class="toggle">Already have an account <span (click)="toggleMode()">Sign In</span></div>
+            }
+        </div>
+    </mat-card>
