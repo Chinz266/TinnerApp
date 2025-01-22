@@ -30,6 +30,7 @@ const app = new Elysia()
   .use(UserController)
   .use(PhotoController)
   .use(LinkController)
+  .use(UserController)
   
   .listen({
     port: Bun.env.PORT || 8000,
