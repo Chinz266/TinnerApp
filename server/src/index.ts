@@ -1,4 +1,4 @@
-import { Elysia, t } from "elysia";
+import { Elysia, error, t } from "elysia";
 import { example } from "./controllers/example.controller";
 import swagger from "@elysiajs/swagger";
 import { swaggerConfig } from "./configs/swagger.config";
@@ -11,6 +11,7 @@ import { UserController } from "./controllers/user.controller";
 import staticPlugin from "@elysiajs/static";
 import { PhotoController } from "./controllers/photo.controller";
 import { LinkController } from "./controllers/like.controller";
+import { ErrControlloer } from "./controllers/errorController";
 
 
 DataBase_MongoDB.connect()
@@ -31,6 +32,7 @@ const app = new Elysia()
   .use(PhotoController)
   .use(LinkController)
   .use(UserController)
+  .use(ErrControlloer)
   
   .listen({
     port: Bun.env.PORT || 8000,
