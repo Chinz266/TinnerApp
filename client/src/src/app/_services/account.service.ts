@@ -9,6 +9,15 @@ import { parseUserPhoto } from '../_helper/helper'
   providedIn: 'root'
 })
 export class AccountService {
+  deletePhoto(photo_id: string) {
+    throw new Error('Method not implemented.')
+  }
+  setAvatar(photo_id: string) {
+    throw new Error('Method not implemented.')
+  }
+  uploadPhoto(imgFile: File) {
+    throw new Error('Method not implemented.')
+  }
 
   private _key = 'account';
   private _baseApiUrl = environment.baseUrl + 'api/account/'
